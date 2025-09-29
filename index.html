@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado ZEBU</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f9f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* ===== CABEÇALHO ===== */
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #fa0303, #fc0303);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 1s ease-out;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .logo-container img {
+            height: 40px;
+            width: auto;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-container span {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 30px;
+            padding: 6px 12px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            flex: 2;
+            min-width: 200px;
+            margin: 0 10px;
+        }
+        
+        .search-bar:hover {
+            transform: scale(1.02);
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            padding: 8px 12px;
+            border-radius: 30px;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        
+        .search-bar button {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            margin-left: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .search-bar button:hover {
+            background: #ffaa00;
+            color: #fff;
+            transform: scale(1.05);
+        }
+        
+        .contact-admin {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 1.5s ease-out;
+            flex: 1;
+            justify-content: flex-end;
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            font-size: 0.8rem;
+        }
+        
+        .contact-info i {
+            color: #ffeb3b;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .admin-btn {
+            background: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+        }
+        
+        .admin-btn:hover {
+            background: #e64a19;
+            transform: scale(1.05);
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #fff;
+            padding: 6px 10px;
+            transition: all 0.3s;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #ff5722;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        .promo-icons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .promo-icons i {
+            font-size: 1.2rem;
+            color: #ffeb3b;
+            animation: bounce 2s infinite;
+        }
+        
+        /* ===== MODAL DO CARRINHO ===== */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        .cart-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .cart-items {
+            margin: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .item-info img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .item-details {
+            flex-grow: 1;
+        }
+        
+        .item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .item-price {
+            color: #2b8a3e;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quantity-btn {
+            background: #fd0303;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: background 0.3s;
+            font-size: 0.8rem;
+        }
+        
+        .quantity-btn:hover {
+            background: #2b8a3e;
+        }
+        
+        .remove-btn {
+            background: #ff5722;
+            margin-left: 5px;
+        }
+        
+        .cart-total {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 15px 0;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+        }
+        
+        .checkout-btn {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .checkout-btn:hover {
+            background: #1ebe57;
+        }
+        
+        /* ===== SEÇÃO DE PRODUTOS ===== */
+        .products-section {
+            padding: 20px 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .products-section h2 {
+            text-align: center;
+            color: #2b8a3e;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .products-section h2:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #ffcc00;
+            margin: 8px auto;
+            border-radius: 2px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: flex-start;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+            padding: 0 5px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .filter-buttons::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-buttons button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            background: #256c32;
+            color: #fff;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            font-size: 0.8rem;
+        }
+        
+        .filter-buttons button:hover {
+            background: #ff1504;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .filter-buttons button.active {
+            background: #ffcc00;
+            color: #000;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .product-card h3 {
+            font-size: 0.9rem;
+            margin: 8px 0;
+            color: #333;
+            flex-grow: 1;
+            line-height: 1.3;
+        }
+        
+        .product-card p {
+            margin: 6px 0;
+            color: #2b8a3e;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .product-card .promo {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ff5722;
+            color: #fff;
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        
+        .add-to-cart-btn {
+            margin-top: 10px;
+            display: inline-block;
+            background: #256c32;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            font-size: 0.8rem;
+        }
+        
+        .add-to-cart-btn:hover {
+            background: #2b8a3e;
+        }
+        
+        /* ===== CALENDÁRIO ===== */
+        .calendar-container {
+            max-width: 100%;
+            margin: 30px 15px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-nav {
+            background: #256c32;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .calendar-nav:hover {
+            background: #2b8a3e;
+        }
+        
+        .calendar-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #256c32;
+        }
+        
+        .calendar table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        
+        .calendar th, .calendar td {
+            padding: 8px 5px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+        }
+        
+        .calendar th {
+            background: #06df84;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .calendar td {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .calendar td:hover {
+            background: #e8f5e9;
+        }
+        
+        .current-day {
+            background-color: #2b8a3e !important;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* ===== RODAPÉ ===== */
+        footer {
+            background: #f80a02;
+            color: #fff;
+            text-align: center;
+            padding: 20px 15px;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== ANIMAÇÕES ===== */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* ===== RESPONSIVIDADE ADICIONAL ===== */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px;
+                gap: 10px;
+            }
+            
+            .logo-container {
+                justify-content: center;
+                margin-bottom: 5px;
+            }
+            
+            .search-bar {
+                margin: 5px 0;
+                order: 3;
+                min-width: 100%;
+            }
+            
+            .contact-admin {
+                order: 2;
+                justify-content: space-between;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .product-card {
+                padding: 10px;
+            }
+            
+            .product-card img {
+                height: 100px;
+            }
+            
+            .filter-buttons {
+                gap: 5px;
+            }
+            
+            .filter-buttons button {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+            
+            .cart-content {
+                margin: 5% auto;
+                padding: 15px;
+                width: 95%;
+            }
+            
+            .calendar-container {
+                margin: 20px 10px;
+                padding: 15px;
+            }
+            
+            .calendar th, .calendar td {
+                padding: 6px 3px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .logo-container span {
+                font-size: 1.2rem;
+            }
+            
+            .contact-info {
+                font-size: 0.7rem;
+                padding: 5px 8px;
+            }
+            
+            .admin-btn {
+                font-size: 0.7rem;
+                padding: 5px 10px;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .item-quantity {
+                margin-top: 8px;
+                align-self: flex-end;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo-container span {
+                font-size: 1.1rem;
+            }
+            
+            .contact-info {
+                font-size: 0.65rem;
+                padding: 4px 6px;
+            }
+            
+            .admin-btn {
+                font-size: 0.65rem;
+                padding: 4px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== CABEÇALHO ===== -->
+    <div class="header-top">
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo do Mercado ZEBU">
+            <span>Mercado ZEBU</span>
+        </div>
+        
+        <div class="search-bar">
+            <input id="search" type="text" placeholder="O que você está procurando?">
+            <button onclick="doSearch()"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="contact-admin">
+            <div class="contact-info">
+                <i class="fas fa-phone"></i>
+                <strong id="contactLabel">3921-0168</strong>
+            </div>
+            <button class="admin-btn" onclick="openAdmin()">Painel (Admin)</button>
+            <div class="cart-icon" onclick="openCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+        
+        <div class="promo-icons">
+            <i class="fas fa-tag"></i>
+            <i class="fas fa-bolt"></i>
+            <i class="fas fa-gift"></i>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DO CARRINHO ===== -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-content">
+            <span class="close" onclick="closeCart()">&times;</span>
+            <h2>Seu Carrinho de Compras</h2>
+            <div class="cart-items" id="cartItems">
+                <p id="emptyCartMessage">Seu carrinho está vazio.</p>
+            </div>
+            <div class="cart-total">Total: R$ <span id="cartTotal">0,00</span></div>
+            <button class="checkout-btn" onclick="checkoutWhatsApp()">
+                <i class="fab fa-whatsapp"></i> Finalizar Pedido via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== SEÇÃO DE PRODUTOS ===== -->
+    <div class="products-section">
+        <h2>Promoções da Semana</h2>
+        
+        <div class="filter-buttons">
+            <button onclick="filterProducts('all')" class="active">Todos</button>
+            <button onclick="filterProducts('mercearia')">Mercearia</button>
+            <button onclick="filterProducts('acougue')">Açougue</button>
+            <button onclick="filterProducts('hortifruti')">Hortifruti</button>
+            <button onclick="filterProducts('higiene')">Higiene</button>
+            <button onclick="filterProducts('padaria')">Padaria</button>
+            <button onclick="filterProducts('bebidas')">Bebidas</button>
+            <button onclick="filterProducts('laticinios')">Laticínios</button>
+            <button onclick="filterProducts('limpeza')">Limpeza</button>
+        </div>
+        
+        <div class="products-grid" id="productsGrid">
+            <!-- Produtos serão carregados via JavaScript -->
+        </div>
+    </div>
+
+    <!-- ===== CALENDÁRIO ===== -->
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <button class="calendar-nav" onclick="changeMonth(-1)">❮</button>
+            <h3 class="calendar-title" id="monthYear"></h3>
+            <button class="calendar-nav" onclick="changeMonth(1)">❯</button>
+        </div>
+        <div class="calendar">
+            <table id="calendarTable">
+                <thead>
+                    <tr>
+                        <th>Dom</th>
+                        <th>Seg</th>
+                        <th>Ter</th>
+                        <th>Qua</th>
+                        <th>Qui</th>
+                        <th>Sex</th>
+                        <th>Sáb</th>
+                    </tr>
+                </thead>
+                <tbody id="calendarBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== RODAPÉ ===== -->
+    <footer>
+        <p>&copy; 2025 Mercado ZEBU. Todos os direitos reservados.</p>
+        <p>Endereço: Av.Pico das Aulhas negras 725 - Altos de Santana - São Paulo/SP</p>
+        <p> WhatsApp: (12) 39221-0168</p>
+    </footer>
+
+    <script>
+        // ===== VARIÁVEIS GLOBAIS =====
+        let cart = [];
+        let currentDate = new Date();
+        let products = [];
+
+        // ===== DADOS DOS PRODUTOS =====
+        function initializeProducts() {
+            products = [
+                // MERCEARIA (10 produtos)
+                { id: 1, name: "Arroz Branco Tipo 1(5kg)", price: 24.90, category: "mercearia", image: "arroz.webp", promo: "Oferta" },
+                { id: 2, name: "Feijão Carioca(1kg)", price: 8.50, category: "mercearia", image: "feijão.webp", promo: "" },
+                { id: 3, name: "Açúcar Refinado(1kg)", price: 4.20, category: "mercearia", image: "açucar.webp", promo: "" },
+                { id: 4, name: "Óleo de Soja(90ml)", price: 6.90, category: "mercearia", image: "oleo.webp", promo: "" },
+                { id: 5, name: "Macarrão Espaguete(400gm)", price: 3.80, category: "mercearia", image: "maca.webp", promo: "Novo" },
+                { id: 6, name: "Farinha de Trigo(1kg)", price: 4.50, category: "mercearia", image: "farinha.webp", promo: "" },
+                { id: 7, name: "Café em Pó 3 Corações(500g)", price: 32.90, category: "mercearia", image: "caf.webp", promo: "" },
+                { id: 8, name: "Sal Refinado(1kg)", price: 2.50, category: "mercearia", image: "sal.webp", promo: "" },
+                
+                // AÇOUGUE (10 produtos)
+                { id: 11, name: "Alcatra Bovina (1kg)", price: 39.90, category: "acougue", image: "alc.webp", promo: "Promo" },
+                { id: 12, name: "Picanha Bovina (1kg)", price: 69.90, category: "acougue", image: "pica.webp", promo: "" },
+                { id: 13, name: "Contrafilé (1kg)", price: 45.90, category: "acougue", image: "contra.png", promo: "" },
+                { id: 14, name: "Catele Bovina (1kg)", price: 37.90, category: "acougue", image: "cost.webp", promo: "Oferta" },
+                { id: 15, name: "Frango Inteiro cong.(1kg)", price: 37.90, category: "acougue", image: "frango.webp", promo: "" },
+                { id: 16, name: "Linguiça Toscana (kg)", price: 24.90, category: "acougue", image: "lin.webp", promo: "" },
+                { id: 17, name: "Maminha (1kg)", price: 32.90, category: "acougue", image: "mam.webp", promo: "" },
+                { id: 18, name: "Barriga Suina(1kg)", price: 14.90, category: "acougue", image: "bar.webp", promo: "Novo" },
+                
+                // HORTIFRUTI (10 produtos)
+                { id: 21, name: "Banana Prata (1kg)", price: 4.90, category: "hortifruti", image: "banan.webp", promo: "Promo" },
+                { id: 22, name: "Maçã Fuji (1kg)", price: 8.90, category: "hortifruti", image: "macan.webp", promo: "" },
+                { id: 23, name: "Laranja Pera (1kg)", price: 3.90, category: "hortifruti", image: "lar.webp", promo: "Oferta" },
+                { id: 24, name: "Tomate (1kg)", price: 5.90, category: "hortifruti", image: "tomate.png", promo: "" },
+                { id: 25, name: "Alface Crespa (un)", price: 2.50, category: "hortifruti", image: "alfa.webp", promo: "" },
+                { id: 26, name: "Cenoura (1kg)", price: 3.90, category: "hortifruti", image: "ceno.webp", promo: "" },
+               
+                // HIGIENE (10 produtos)
+                { id: 31, name: "Sabonete Líquido (500ml) ", price: 14.90, category: "higiene", image: "sabon.png", promo: "Promo" },
+                { id: 32, name: "Shampoo Anticaspa(400ml)", price: 12.90, category: "higiene", image: "sham.webp", promo: "" },
+                { id: 33, name: "Creme Dental(un)", price: 4.50, category: "higiene", image: "dental.webp", promo: "Oferta" },
+                { id: 34, name: "Desodorante Aerosol(un)", price: 11.90, category: "higiene", image: "deso.webp", promo: "" },
+                { id: 35, name: "Papel Higiênico (12 rolos)", price: 18.90, category: "higiene", image: "papel.webp", promo: "" },
+                { id: 36, name: "Condicionador(un)", price: 10.90, category: "higiene", image: "condwebp.webp", promo: "" },
+               
+                // PADARIA (10 produtos)
+                { id: 41, name: "Pão Francês (1kg)", price: 12.90, category: "padaria", image: "pao.webp", promo: "Promo" },
+                { id: 42, name: "Bolo de Chocolate (500g)", price: 59.90, category: "padaria", image: "bolo.png", promo: "" },
+                { id: 43, name: "Esfira de Carne(un)", price: 3.50, category: "padaria", image: "esf.webp", promo: "Oferta" },
+                { id: 44, name: "Empada de Frango(un)", price: 6.90, category: "padaria", image: "emp.webp", promo: "" },
+                { id: 45, name: "Pão de Milho (kg)", price: 4.50, category: "padaria", image: "pmilho.webp", promo: "" },
+                { id: 46, name: "Pão de Forma (500g)", price: 7.90, category: "padaria", image: "forma.webp", promo: "" },
+               
+                // BEBIDAS (10 produtos)
+                { id: 51, name: "Refri. Coca-Cola (2L)", price: 8.90, category: "bebidas", image: "coca.webp", promo: "Promo" },
+                { id: 52, name: "Suco de Laranja (1L)", price: 6.90, category: "bebidas", image: "suco.webp", promo: "" },
+                { id: 53, name: "Água de Coco (500ml)", price: 2.50, category: "bebidas", image: "coco.webp", promo: "Oferta" },
+                { id: 54, name: "Cerveja Heineken (350ml)", price: 6.20, category: "bebidas", image: "cervejah.webp", promo: "" },
+                { id: 55, name: "Wisk Dack Daniesls (1l)", price: 7.90, category: "bebidas", image: "wisk.webp", promo: "" },
+                { id: 56, name: "Vinho Tinto Seco (750ml)", price: 24.90, category: "bebidas", image: "vinho.webp", promo: "" },
+                
+                // LATICÍNIOS (10 produtos)
+                { id: 61, name: "Leite Integral (1L)", price: 4.50, category: "laticinios", image: "leite.webp", promo: "Promo" },
+                { id: 62, name: "Queijo Mussarela (100g)", price: 12.90, category: "laticinios", image: "quei.jpg", promo: "" },
+                { id: 63, name: "Iogurte Natural (170g)", price: 6.90, category: "laticinios", image: "io.webp", promo: "Oferta" },
+                { id: 64, name: "Manteiga com Sal (200g)", price: 12.90, category: "laticinios", image: "mant.png", promo: "" },
+                { id: 65, name: "Requeijão Cremoso (200g)", price: 6.50, category: "laticinios", image: "re.webp", promo: "" },
+                { id: 66, name: "Presunto Fatiado (100g)", price: 9.80, category: "laticinios", image: "presun.png", promo: "" },
+                
+                // LIMPEZA (10 produtos)
+                { id: 71, name: "Desinfetante (500ml)", price: 9.90, category: "limpeza", image: "desin.webp", promo: "Promo" },
+                { id: 72, name: "Detergente Líquido (500ml)", price: 2.90, category: "limpeza", image: "dete.webp", promo: "" },
+                { id: 73, name: "Sabão em Pó (1kg)", price: 12.90, category: "limpeza", image: "saba.webp", promo: "Oferta" },
+                { id: 74, name: "Água Sanitária (1L)", price: 4.50, category: "limpeza", image: "aguas.webp", promo: "" },
+                { id: 75, name: "Amaciante de Roupas (1L)", price: 10.90, category: "limpeza", image: "ama.webp", promo: "" },
+                { id: 76, name: "Limpa Vidros (500ml)", price: 8.90, category: "limpeza", image: "limpa.webp", promo: "" },
+                { id: 77, name: "Lutra Movéis (200ml)", price: 7.90, category: "limpeza", image: "lustra.webp", promo: "Novo" },
+                
+            ];
+        }
+
+        // ===== FUNÇÕES DO CARRINHO =====
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'block';
+            updateCartDisplay();
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function addToCart(productId, event) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            updateCartCount();
+            updateCartDisplay();
+            
+            // Feedback visual
+            const addButton = event.target;
+            const originalText = addButton.innerHTML;
+            addButton.innerHTML = '<i class="fas fa-check"></i> Adicionado';
+            addButton.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                addButton.innerHTML = originalText;
+                addButton.style.background = '';
+            }, 1500);
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        function updateCartDisplay() {
+            const cartItemsElement = document.getElementById('cartItems');
+            const emptyCartMessage = document.getElementById('emptyCartMessage');
+            const cartTotalElement = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartItemsElement.innerHTML = '<p id="emptyCartMessage">Seu carrinho está vazio.</p>';
+                cartTotalElement.textContent = '0,00';
+                return;
+            }
+            
+            emptyCartMessage.style.display = 'none';
+            
+            let itemsHTML = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                itemsHTML += `
+                    <div class="cart-item">
+                        <div class="item-info">
+                            <img src="${item.image}" alt="${item.name}">
+                            <div class="item-details">
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-price">R$ ${item.price.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <div class="item-quantity">
+                            <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            <button class="quantity-btn remove-btn" onclick="removeFromCart(${index})">×</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItemsElement.innerHTML = itemsHTML;
+            cartTotalElement.textContent = total.toFixed(2);
+        }
+
+        function changeQuantity(index, change) {
+            cart[index].quantity += change;
+            
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            
+            updateCartCount();
+            updateCartDisplay();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            updateCartDisplay();
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+            
+            const phoneNumber = '5512988461978';
+            let message = 'Olá, Mercado ZEBU! Gostaria de fazer o seguinte pedido:\n\n';
+            
+            cart.forEach(item => {
+                message += `• ${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
+            });
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            message += `\n*Total: R$ ${total.toFixed(2)}*`;
+            message += '\n\nPor favor, confirme o pedido e informe as formas de pagamento e entrega.';
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappURL, '_blank');
+        }
+
+        // ===== FUNÇÕES DO CALENDÁRIO =====
+        function createCalendar(date) {
+            const calendarBody = document.getElementById('calendarBody');
+            const monthYearElement = document.getElementById('monthYear');
+            
+            calendarBody.innerHTML = '';
+            
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            monthYearElement.textContent = date.toLocaleDateString('pt-BR', { 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+            
+            let row = document.createElement('tr');
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyCell = document.createElement('td');
+                row.appendChild(emptyCell);
+            }
+            
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('td');
+                cell.textContent = day;
+                
+                if (isCurrentMonth && day === today.getDate()) {
+                    cell.classList.add('current-day');
+                }
+                
+                row.appendChild(cell);
+                
+                if ((day + startingDayOfWeek) % 7 === 0) {
+                    calendarBody.appendChild(row);
+                    row = document.createElement('tr');
+                }
+            }
+            
+            if (row.cells.length > 0) {
+                calendarBody.appendChild(row);
+            }
+        }
+
+        function changeMonth(change) {
+            currentDate.setMonth(currentDate.getMonth() + change);
+            createCalendar(currentDate);
+        }
+
+        // ===== FUNÇÕES DE PRODUTOS E FILTROS =====
+        function displayProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            let productsHTML = '';
+            
+            products.forEach(product => {
+                productsHTML += `
+                    <div class="product-card" data-category="${product.category}">
+                        ${product.promo ? `<span class="promo">${product.promo}</span>` : ''}
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>R$ ${product.price.toFixed(2)}</p>
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id}, event)">
+                            <i class="fas fa-cart-plus"></i> Adicionar
+                        </button>
+                    </div>
+                `;
+            });
+            
+            productsGrid.innerHTML = productsHTML;
+        }
+
+        function filterProducts(category) {
+            const products = document.querySelectorAll('.product-card');
+            const filterButtons = document.querySelectorAll('.filter-buttons button');
+            
+            filterButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category === category) {
+                    product.style.display = 'block';
+                    setTimeout(() => {
+                        product.style.opacity = '1';
+                        product.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    product.style.opacity = '0';
+                    product.style.transform = 'translateY(10px)';
+                    setTimeout(() => {
+                        product.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        function doSearch() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            let found = false;
+
+            products.forEach(product => {
+                const productName = product.querySelector('h3').textContent.toLowerCase();
+                if (productName.includes(query)) {
+                    product.style.display = 'block';
+                    found = true;
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+
+            if (!found && query !== '') {
+                alert('Nenhum produto encontrado para: ' + query);
+            } else if (query === '') {
+                filterProducts('all');
+                document.querySelector('.filter-buttons button').classList.add('active');
+            }
+        }
+
+        function openAdmin() {
+            alert('Abrir painel do admin');
+        }
+
+        // Fechar o modal do carrinho ao clicar fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target === modal) {
+                closeCart();
+            }
+        }
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeProducts();
+            displayProducts();
+            createCalendar(currentDate);
+            
+            document.getElementById('search').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    doSearch();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
